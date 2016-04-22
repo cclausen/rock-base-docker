@@ -10,7 +10,17 @@ expect -re ".*github.*" { send "\r" }\n\
 expect -re ".*bootstrapping anyway.*" { send "\r" }\n\
 expect -re ".*So, what do you want.*" { send "\r" }\n\
 expect eof\n\
-#interact\n\
 ' >> /opt/rock/expect_bootstrap.exp
 RUN chmod +x /opt/rock/expect_bootstrap.exp
 RUN cd /opt/rock/ && ./expect_bootstrap.exp
+
+RUN . /opt/rock/env.sh && gem2.0 install autoproj
+RUN echo '#!/usr/bin/expect\n\
+set timeout -1\n\
+spawn  ruby2.0 autoproj_bootstrap git https://github.com/rock-core/buildconf.git push_to=git@github.com:rock-core/buildconf.git\n\
+expect -re ".*bootstrapping anyway.*" { send "\r" }\n\
+expect -re ".*So, what do you want.*" { send "\r" }\n\
+expect eof\n\
+' >> /opt/rock/expect_autoproj_bootstrap.exp
+RUN chmod +x /opt/rock/expect_autoproj_bootstrap.exp
+RUN cd /opt/rock/ && ./expect_autoproj_bootstrap.exp
