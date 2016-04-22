@@ -3,25 +3,10 @@ set timeout -1
 
 spawn ./bootstrap.sh ruby2.0 localdev
 
-expect { -re ".*github.*" { 
-                           send "\r" 
-                           exp_continue
-                          }
-         -re ".*bootstrapping anyway.*" { 
-                                          send "\r" 
-                                          exp_continue
-                                        }
-         -re ".*So, what do you want.*" { 
-                                          send "\r" 
-                                          exp_continue
-                                        }
-         -re ".*password for.*" { 
-                                  send "rocker\r" 
-                                  exp_continue
-                                }
-             eof {
-                   return 0
-		 }
-           }
+expect {
+        -re ".*github.*" {send "\r"; exp_continue }
+        -re ".*anyway.*" {send "\r"; exp_continue }
+        -re ".*password for.*" {send "rocker\r"; exp_continue }
+	eof {return 0}
+}
 
-expect eof
