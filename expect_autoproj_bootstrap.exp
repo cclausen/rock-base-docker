@@ -3,8 +3,10 @@ set timeout -1
 
 spawn  ruby2.0 autoproj_bootstrap git https://github.com/rock-core/buildconf.git push_to=git@github.com:rock-core/buildconf.git
 
-expect -re ".*bootstrapping anyway.*" { send "\r" }
-expect -re ".*So, what do you want.*" { send "\r" }
-
-expect eof
+expect {
+        -re ".*bootstrapping anyway.*" { send "\r"; exp_continue }
+        -re ".*So, what do you want.*" { send "\r"; exp_continue }
+        -re ".*password for.*" { send "rocker\r"; exp_continue }
+        eof {return 0}
+}
 
